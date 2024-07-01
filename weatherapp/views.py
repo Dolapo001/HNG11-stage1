@@ -33,8 +33,8 @@ class HelloAPI(View):
         response = requests.get(weather_url)
         weather_data = response.json()
 
-        main_weather = weather_data.get('main', {})
-        temp = main_weather.get('temp', 'unavailable')
+        main_weather = weather_data.get('main')
+        temp = main_weather.get('temp')
 
         greeting = f"Hello, {visitor_name}!, the temperature is {temp} degrees Celsius in {city}"
 
