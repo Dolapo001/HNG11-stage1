@@ -15,7 +15,6 @@ def get_location_from_ip(ip_address):
         city = data.get('city', 'Unknown')
         return city
     except requests.exceptions.RequestException as e:
-        logger.error(f"Error getting location for IP {ip_address}: {e}")
         return 'Unknown'
 
 class HelloAPI(View):
