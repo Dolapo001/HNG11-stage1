@@ -3,4 +3,4 @@ services:
     type: web
     env: python3
     buildCommand: ./build.sh
-    startCommand: gunicorn HNG11Stage1.wsgi:application
+    startCommand: python -m gunicorn HNG11Stage1.wsgi:application
