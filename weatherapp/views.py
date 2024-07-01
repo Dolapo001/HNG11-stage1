@@ -29,11 +29,12 @@ class HelloAPI(View):
         city = get_location_from_ip(client_ip)
         weather_api_key = os.getenv('OPENWEATHERMAP_API_KEY')
         weather_url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={weather_api_key}&units=metric"
+
         response = requests.get(weather_url)
         weather_data = response.json()
 
-        main_weather = weather_data.get('main')
-        temp = main_weather.get('temp')
+        main_weather = weather_data.get('main', {})
+        temp = main_weather.get('temp', 'unavailable')
 
         greeting = f"Hello, {visitor_name}!, the temperature is {temp} degrees Celsius in {city}"
 
