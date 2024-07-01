@@ -9,14 +9,14 @@ load_dotenv()
 
 def get_location_from_ip(ip_address):
     try:
-        response = requests.get(f'https://ipinfo.io/{ip_address}/json/').json()
-        data = response.json()
+        response = requests.get(f'https://ipinfo.io/{ip_address}/json/')
+        response.raise_for_status()  # Raise an error for bad responses (4xx or 5xx)
+        data = response.json()  # Convert response to JSON if successful
         city = data.get('city', 'Unknown')
         return city
-    except Exception as e:
-        print(f"Error getting location: {e}")
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Error getting location for IP {ip_address}: {e}")
         return 'Unknown'
-
 
 class HelloAPI(View):
     def get(self, request):
