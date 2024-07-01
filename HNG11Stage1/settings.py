@@ -23,14 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-ya9gxdh7&+^l9od_p90za7c$4v(-xgepzl)0@_m6bn&k_(wudm'
 
-OPENWEATHERMAP_API_KEY = os.getenv('OPENWEATHERMAP_API_KEY')
-
-YOUR_IPBASE_API_KEY = os.getenv('YOUR_IPBASE_API_KEY')
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
