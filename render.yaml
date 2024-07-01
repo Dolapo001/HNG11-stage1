@@ -1,0 +1,6 @@
+services:
+  - name: HNG11Stage1
+    type: web
+    env: python3
+    buildCommand: ./build.sh
+    startCommand: gunicorn HNG11Stage1.wsgi:application
