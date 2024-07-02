@@ -12,9 +12,10 @@ def get_location_from_ip(ip_address):
         response = requests.get(f'https://ipinfo.io/{ip_address}/json/')
         response.raise_for_status()
         data = response.json()
-        location = data.get('loc', '0,0')
+        location = data.get('location', '0,0')
+        city = data.get('city')
         lat, lon = location.split(',')
-        return lat, lon
+        return city, lat, lon
     except requests.exceptions.RequestException as e:
         return '0', '0'
 
@@ -27,7 +28,7 @@ class HelloAPI(View):
             client_ip = client_ip.split(',')[0].strip()
         else:
             client_ip = request.META.get('REMOTE_ADDR', '127.0.0.1')
-        lat, lon = get_location_from_ip(client_ip)
+        city, lat, lon = get_location_from_ip(client_ip)
         weather_api_key = os.getenv('OPENWEATHERMAP_API_KEY')
         weather_url = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={weather_api_key}&units=metric"
 
@@ -41,6 +42,6 @@ class HelloAPI(View):
 
         return JsonResponse({
             "client_ip": client_ip,
-            "location": f"{lat}, {lon}",
+            "location": f"{city} ({lat} {lon})",
             "greeting": greeting
         })
