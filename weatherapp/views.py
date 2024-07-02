@@ -10,12 +10,13 @@ load_dotenv()
 def get_location_from_ip(ip_address):
     try:
         response = requests.get(f'https://ipinfo.io/{ip_address}/json/')
-        response.raise_for_status()  # Raise an error for bad responses (4xx or 5xx)
-        data = response.json()  # Convert response to JSON if successful
-        city = data.get('city', 'Unknown')
-        return city
+        response.raise_for_status()
+        data = response.json()
+        location = data.get('loc', '0,0')
+        lat, lon = location.split(',')
+        return lat, lon
     except requests.exceptions.RequestException as e:
-        return 'Unknown'
+        return '0', '0'
 
 
 class HelloAPI(View):
@@ -26,9 +27,9 @@ class HelloAPI(View):
             client_ip = client_ip.split(',')[0].strip()
         else:
             client_ip = request.META.get('REMOTE_ADDR', '127.0.0.1')
-        city = get_location_from_ip(client_ip)
+        lat, lon = get_location_from_ip(client_ip)
         weather_api_key = os.getenv('OPENWEATHERMAP_API_KEY')
-        weather_url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={weather_api_key}&units=metric"
+        weather_url = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={weather_api_key}&units=metric"
 
         response = requests.get(weather_url)
         weather_data = response.json()
@@ -36,10 +37,10 @@ class HelloAPI(View):
         main_weather = weather_data.get('main')
         temp = main_weather.get('temp')
 
-        greeting = f"Hello, {visitor_name}!, the temperature is {temp} degrees Celsius in {city}"
+        greeting = f"Hello, {visitor_name}!, the temperature is {temp} degrees Celsius in {lat, lon}"
 
         return JsonResponse({
             "client_ip": client_ip,
-            "location": city,
+            "location": f"{lat}, {lon}",
             "greeting": greeting
         })
